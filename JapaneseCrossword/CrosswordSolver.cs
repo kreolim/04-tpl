@@ -1,12 +1,27 @@
 ﻿using System;
+using System.IO;
 
 namespace JapaneseCrossword
 {
-    public class CrosswordSolver : ICrosswordSolver
+    public abstract class CrosswordSolver : ICrosswordSolver
     {
-        public SolutionStatus Solve(string inputFilePath, string outputFilePath)
+        protected Crossword cross;
+
+        protected bool ValidateInputPath(string inputFilePath)
         {
-            throw new NotImplementedException();
+            try
+            {
+                cross = CrosswordReader.ReadCrossword(inputFilePath);
+            }
+            catch (Exception e)
+            {
+                if (e is FileNotFoundException || e is IOException || e is ArgumentNullException)
+                    return false;
+                throw;
+            }
+            return true;
         }
+
+        public abstract SolutionStatus Solve(string inputFilePath, string outputFilePath);
     }
 }
